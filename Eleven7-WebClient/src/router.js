@@ -24,9 +24,6 @@ let router = new Router({
             path: '/register',
             name: 'register',
             component: Register,
-            meta: { 
-                guest: true
-            }
         },
         {
           path: '/dashboard',

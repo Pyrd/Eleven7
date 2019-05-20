@@ -30,6 +30,7 @@ export default {
   data: () => ({
       menus: [
         {name:'Employees', path:'employees',icon:'people_outline'},
+        {name:'Register', path:'register',icon:'people_outline'},
       ],
     }),
   computed: mapGetters({

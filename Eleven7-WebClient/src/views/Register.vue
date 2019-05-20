@@ -1,86 +1,370 @@
 <template>
-    <div>
-        <h4>Register</h4>
-        <form>
-            <label for="first_name">First Name</label>
-            <div>
-                <input id="first_name" type="text" v-model="cred.first_name" required autofocus>
-            </div>
-            <label for="last_name">Last Name</label>
-            <div>
-                <input id="last_name" type="text" v-model="cred.last_name" required autofocus>
-            </div>
+  <v-card height="100%" width="100%">
+    <template>
+      <v-stepper v-model="e1">
+        <v-stepper-header>
+          <v-stepper-step :complete="e1 > 1" step="1">Main informations</v-stepper-step>
 
-            <label for="email_address" >E-Mail Address</label>
-            <div>
-                <input id="email_address" type="email" v-model="cred.email_address" required>
-            </div>
+          <v-divider></v-divider>
 
-            <label for="phone_number" >Phone Number</label>
-            <div>
-                <input id="phone_number" type="phone" v-model="cred.phone_number" required>
-            </div>
+          <v-stepper-step :complete="e1 > 2" step="2">Address</v-stepper-step>
 
-            <label for="password">Password</label>
-            <div>
-                <input id="password" type="password" v-model="cred.password" required>
-            </div>
+          <v-divider></v-divider>
 
-            <label for="password-confirm">Confirm Password</label>
-            <div>
-                <input id="password-confirm" type="password" v-model="cred.password_confirmation" required>
-            </div>
+          <v-stepper-step step="3">Administration</v-stepper-step>
+        </v-stepper-header>
 
-            <label for="password-confirm">Is this an administrator account?</label>
-            <div>
-                <select v-model="cred.is_admin">
-                    <option value=1>Yes</option>
-                    <option value=0>No</option>
-                </select>
-            </div>
+        <v-stepper-items>
+          <v-stepper-content step="1">
+            <v-card flat height="100%" width="100%">
+              <v-toolbar dark color="primary">
+                <v-icon>person</v-icon>
+                <v-toolbar-title>Main informations</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form ref="form" v-model="valid_one">
+                  <span>
+                    <h2 class="headline" style="margin:10px 0px 20px 0px">
+                      <b>Basics</b>
+                    </h2>
+                  </span>
+                  <v-text-field
+                    label="First Name"
+                    outline
+                    prepend-inner-icon="perm_identity"
+                    v-model="cred.first_name"
+                    required
+                  ></v-text-field>
+                  <v-text-field label="Last Name" outline v-model="cred.birthdate" required></v-text-field>
+                  <v-text-field
+                    label="Birth date"
+                    outline
+                    prepend-inner-icon="cake"
+                    v-model="cred.last_name"
+                    required
+                    :rules="birthdateRules"
+                  ></v-text-field>
+                  <span>
+                    <h2 class="headline" style="margin:0px 0px 20px 0px">
+                      <b>Contacts</b>
+                    </h2>
+                  </span>
+                  <v-text-field
+                    prepend-inner-icon="email"
+                    label="Email"
+                    type="email"
+                    outline
+                    v-model="cred.email_address"
+                    required
+                    :rules="emailRules"
+                  ></v-text-field>
+                  <v-text-field
+                    prepend-inner-icon="phone"
+                    label="Phone Number"
+                    outline
+                    v-model="cred.phone_number"
+                    required
+                    :rules="phoneRules"
+                  ></v-text-field>
+                  <span>
+                    <h2 class="headline" style="margin:0px 0px 20px 0px">
+                      <b>Password</b>
+                    </h2>
+                  </span>
+                  <v-text-field
+                    id="password"
+                    prepend-inner-icon="lock"
+                    label="Password"
+                    type="password"
+                    :rules="passwordRules"
+                    outline
+                    v-model="cred.password"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    prepend-inner-icon="lock"
+                    label="Confirm Password"
+                    type="password"
+                    outline
+                    :rules="passwordConfirmationRules"
+                    v-model="cred.password_confirmation"
+                    required
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click="next()">Continue</v-btn>
+                <!--:disabled="!valid_one"-->
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="cancel()">Cancel</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-stepper-content>
 
-            <div>
-                <button type="submit" @click="handleSubmit">
-                    Register
-                </button>
-            </div>
-        </form>
-    </div>
+          <v-stepper-content step="2">
+            <v-card flat height="100%" width="100%">
+              <v-toolbar dark color="primary">
+                <v-icon>place</v-icon>
+                <v-toolbar-title>Address</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form ref="form2" v-model="valid_two">
+                  <v-text-field
+                    label="Street Number"
+                    outline
+                    prepend-inner-icon="place"
+                    v-model="cred.street_num"
+                    :rules="phoneRules"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    label="Address 1"
+                    outline
+                    prepend-inner-icon
+                    v-model="cred.address_1"
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    label="Address 2"
+                    outline
+                    prepend-inner-icon
+                    v-model="cred.address_2"
+                    required
+                  ></v-text-field>
+                  <v-layout align-center justify-space-between>
+                    <v-flex xs4 style="margin-right:10px">
+                      <v-text-field
+                        label="Zip Code"
+                        outline
+                        prepend-inner-icon
+                        v-model="cred.zip_code"
+                        :rules="phoneRules"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+
+                    <v-flex xs8>
+                      <v-text-field
+                        label="City name"
+                        outline
+                        prepend-inner-icon
+                        v-model="cred.city_name"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
+                  <v-text-field
+                    label="Country name"
+                    outline
+                    prepend-inner-icon
+                    v-model="cred.country"
+                    required
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click="next()">Continue</v-btn>
+                <!--:disabled="!valid_two"-->
+                <v-btn color="primary" @click="back()">Back</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="cancel()">Cancel</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-stepper-content>
+
+          <v-stepper-content step="3">
+            <v-card flat height="100%" width="100%">
+              <v-toolbar dark color="primary">
+                <v-icon>info</v-icon>
+                <v-toolbar-title>Administration</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
+                <v-form ref="form2" v-model="valid_three">
+                  <v-subheader class="pl-0">
+                    <b>Salary</b>
+                  </v-subheader>
+                  <span class="display-1 font-weight-light" v-text="cred.salary"></span>
+                  <span class="subheading font-weight-light mr-1">USD/month</span>
+                  <v-slider v-model="cred.salary" max="20000"></v-slider>
+                  <v-select
+                    v-model="cred.job"
+                    :items="job_list"
+                    label="Profession"
+                    outline
+                    item-value="lvl"
+                    item-text="job_name"
+                    :change="SetJob()"
+                  ></v-select>
+                  <v-dialog v-model="store_dialog" width="600px">
+                    <template v-slot:activator="{ on }">
+                        <v-subheader class="pl-0">
+                    <b>Store</b>
+                  </v-subheader>
+                  <span class="subheading font-weight-light mr-1">ID</span>
+                  <span class="display-1 font-weight-light" v-text="cred.store_id"></span>
+                  
+                      <v-btn color="primary" dark v-on="on">Assign to a store</v-btn>
+                      
+                    </template>
+                    <v-card>
+                      <v-card-title><h1><b>Assign to a store</b></h1></v-card-title>
+                      <v-divider></v-divider>
+                      <v-card-text>
+                        <v-radio-group v-model="cred.store_id" column>
+                          <v-radio label="Store1" value="1"></v-radio>
+                          <v-radio label="Store2" value="2"></v-radio>
+                        </v-radio-group>
+                      </v-card-text>
+                      <v-divider></v-divider>
+                      <v-card-actions>
+                        <v-btn color="blue darken-1" flat @click="store_dialog = false">Close</v-btn>
+                        <v-btn color="blue darken-1" flat @click="store_dialog = false">Save</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="sucess" @click="handleSubmit()">Submit</v-btn>
+                <!--:disabled="!valid_two"-->
+                <v-btn color="primary" @click="back()">Back</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="error" @click="cancel()">Cancel</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
+    </template>
+  </v-card>
 </template>
-
+ 
 <script>
-  import * as auth from '../services/auth'
+//TODO
+/*
+Do api controller for addresses
+Add in register api the address and new fields
+Add proper list component in this one
+Add StoreModule in client
+Display additional info such as address
 
-    export default {
-        data(){
-            return {
-              cred : {
-                first_name : "",
-                last_name : "",
-                email_address : "",
-                phone_number : "",
-                password : "",
-                password_confirmation : "",
-                is_admin : null
-              }
-            }
-        },
-        methods : {
-            handleSubmit(e) {
-                e.preventDefault()
 
-                if (this.cred.password === this.cred.password_confirmation && this.cred.password.length > 0)
-                {
-                  auth.register(this.cred)
-                } else {
-                    this.cred.password = ""
-                    this.cred.passwordConfirm = ""
-                    
+*/
+import * as auth from "../services/auth";
 
-                    //REMPLACE WITH SNACKBAR
-                    return alert("Passwords do not match")
-                }
-            }
-        }
+export default {
+  data() {
+    return {
+      e1: 1,
+      valid_one: false,
+      valid_two: false,
+      valid_three: false,
+      store_dialog: false,
+      cred: {
+        store_id: null,
+        first_name: "",
+        last_name: "",
+        birthdate: "",
+        email_address: "",
+        phone_number: "",
+        password: "",
+        password_confirmation: "",
+        job: "",
+        job_level: null,
+        salary: 2000,
+        street_num: null,
+        address_1: "",
+        address_2: "",
+        zip_code: null,
+        city_name: "",
+        country: ""
+      },
+      job_list: [
+        { job_name: "Supervisor", lvl: 4 },
+        { job_name: "Manager", lvl: 3 },
+        { job_name: "Employee", lvl: 2 },
+        { job_name: "Internship", lvl: 1 }
+      ],
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+/.test(v) || "E-mail must be valid"
+      ],
+      birthdateRules: [
+        v => !!v || "Birthdate is required",
+        v =>
+          /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i.test(
+            v
+          ) || "Invalid format, should be dd/mm/yyyy"
+      ],
+      passwordRules: [
+        v =>
+          (v || "").length >= 6 ||
+          `Password should be ${6} or more characters !`
+      ],
+      phoneRules: [v => /^\d*$/.test(v) || `Only digits !`]
+    };
+  },
+  computed: {
+    passwordConfirmationRules() {
+      return [
+        () =>
+          this.cred.password == this.cred.password_confirmation ||
+          "Password must match",
+        v => !!v || "Password connfirmation is required"
+      ];
     }
+  },
+  methods: {
+    handleSubmit: function(e) {
+      e.preventDefault();
+
+      if (
+        this.cred.password === this.cred.password_confirmation &&
+        this.cred.password.length > 0
+      ) {
+        console.log(this.cred);
+        //auth.register(this.cred);
+      } else {
+        this.cred.password = "";
+        this.cred.passwordConfirm = "";
+      }
+    },
+    next: function() {
+      if (this.e1 < 3) this.e1 += 1;
+      else this.submit = true;
+    },
+    back: function() {
+      if (this.e1 > 0) this.e1 -= 1;
+      if (this.submit) this.submit = false;
+    },
+    cancel: function() {
+      this.e1 = 1;
+      this.submit = false;
+      this.cred.first_name = "";
+      (this.cred.first_name = ""),
+        (this.cred.last_name = ""),
+        (this.cred.email_address = ""),
+        (this.cred.phone_number = ""),
+        (this.cred.password = ""),
+        (this.cred.password_confirmation = ""),
+        (this.cred.is_admin = null);
+    },
+    SetJob: function() {
+      switch (this.cred.job_level) {
+        case 4:
+          this.cred.job = "Supervisor";
+          break;
+        case 3:
+          this.cred.job = "Manager";
+          break;
+        case 2:
+          this.cred.job = "Employee";
+          break;
+        case 1:
+          this.cred.job = "Intership";
+          break;
+      }
+    }
+  }
+};
 </script>
