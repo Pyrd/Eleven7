@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 import Login from './views/Login.vue'
 import Register from './views/Register.vue'
 import Admin from './views/Admin.vue'
-import Employees from './views/Employees.vue'
+import Employees from './views/Employees/Employees.vue'
 import AccountSettings from './views/AccountSettings.vue'
 import store from './store/store'
 Vue.use(Router)
@@ -23,7 +23,7 @@ let router = new Router({
         { 
             path: '/register',
             name: 'register',
-            component: Register,
+            component: () =>  import(/* webpackChunkName: "register" */ './views/Register.vue'),
         },
         {
           path: '/dashboard',
@@ -39,12 +39,18 @@ let router = new Router({
             component: Employees,
             meta: { 
                 requiresAuth: true
-            }
+            },
+            children: [
+                {
+                  path: '/:id',
+                  component: () => import(/* webpackChunkName: "employeeprofile" */ './views/Employees/EmployeeProfile.vue')
+                },
+              ]
         },
         {
             path: '/account_settings',
             name: 'AccountSettings',
-            component: AccountSettings,
+            component: () => import(/* webpackChunkName: "acc_settings" */ './views/AccountSettings.vue'),
             meta: { 
                 requiresAuth: true
             }
@@ -52,7 +58,7 @@ let router = new Router({
         {
             path: '/admin',
             name: 'admin',
-            component: Admin,
+            component: () => import(/* webpackChunkName: "admin" */ './views/Admin.vue'),
             meta: { 
                 requiresAuth: true
             }

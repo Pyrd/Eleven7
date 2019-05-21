@@ -23,13 +23,15 @@ app.use(allowCrossDomain)
 
 
 
-
-var EmployeeController = require('./Controllers/EmployeesController');
-app.use('/api', EmployeeController);
-
-
 var AuthController = require('./Controllers/AuthController');
 app.use('/auth', AuthController);
+var EmployeeController = require('./Controllers/EmployeesController');
+app.use('/api', EmployeeController);
+var StoreController = require('./Controllers/StoreController');
+app.use('/api', StoreController);
+
+
+
 
 
 

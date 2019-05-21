@@ -13,24 +13,20 @@ import axios from 'axios'
 // }
 
 
-const baseUrl = "http://localhost:3000/api/employees"
+const baseUrl = "http://localhost:3000/api/stores"
 
 export const getAll = async function(){
     const response = await axios.get(baseUrl)
     return response.data;
 }
 
-export const getEmployee = async function(){
-    var user = JSON.parse(localStorage.getItem('user'));
-    let id = (user.employee_id);
+
+export const getStoreById = async function(id){
     const response = await axios.get(baseUrl+'/'+id)
     return response.data;
 }
 
-export const getEmployeeById = async function(id){
-    const response = await axios.get(baseUrl+'/'+id)
-    return response.data;
-}
+
 
 
 

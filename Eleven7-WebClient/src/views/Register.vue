@@ -35,12 +35,12 @@
                     v-model="cred.first_name"
                     required
                   ></v-text-field>
-                  <v-text-field label="Last Name" outline v-model="cred.birthdate" required></v-text-field>
+                  <v-text-field label="Last Name" outline v-model="cred.last_name" required></v-text-field>
                   <v-text-field
                     label="Birth date"
                     outline
                     prepend-inner-icon="cake"
-                    v-model="cred.last_name"
+                    v-model="cred.birthdate"
                     required
                     :rules="birthdateRules"
                   ></v-text-field>
@@ -93,8 +93,7 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" @click="next()">Continue</v-btn>
-                <!--:disabled="!valid_one"-->
+                <v-btn color="primary" :disabled="!valid_one" @click="next()">Continue</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="cancel()">Cancel</v-btn>
               </v-card-actions>
@@ -163,8 +162,7 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" @click="next()">Continue</v-btn>
-                <!--:disabled="!valid_two"-->
+                <v-btn color="primary" :disabled="!valid_two" @click="next()">Continue</v-btn>
                 <v-btn color="primary" @click="back()">Back</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="cancel()">Cancel</v-btn>
@@ -185,29 +183,45 @@
                   </v-subheader>
                   <span class="display-1 font-weight-light" v-text="cred.salary"></span>
                   <span class="subheading font-weight-light mr-1">USD/month</span>
-                  <v-slider v-model="cred.salary" max="20000"></v-slider>
-                  <v-select
-                    v-model="cred.job"
-                    :items="job_list"
-                    label="Profession"
-                    outline
-                    item-value="lvl"
-                    item-text="job_name"
-                    :change="SetJob()"
-                  ></v-select>
+                  <v-layout row>
+                    <v-flex class="pr-3">
+                      <v-slider v-model="cred.salary" max="20000"></v-slider>
+                    </v-flex>
+
+                    <v-flex shrink style="width: 60px">
+                      <v-text-field
+                        v-model="cred.salary"
+                        class="mt-0"
+                        hide-details
+                        single-line
+                        type="number"
+                      ></v-text-field>
+                    </v-flex>
+                  </v-layout>
                   <v-dialog v-model="store_dialog" width="600px">
                     <template v-slot:activator="{ on }">
+                      <div>
                         <v-subheader class="pl-0">
-                    <b>Store</b>
-                  </v-subheader>
-                  <span class="subheading font-weight-light mr-1">ID</span>
-                  <span class="display-1 font-weight-light" v-text="cred.store_id"></span>
-                  
-                      <v-btn color="primary" dark v-on="on">Assign to a store</v-btn>
-                      
+                          <b>Store</b>
+                        </v-subheader>
+                        <v-layout align-center justify-space-between row fill-height>
+                            <v-flex xs12 sm6>
+                                <span class="subheading font-weight-light mr-1">ID</span>
+                                <span class="display-1 font-weight-light" v-text="cred.store_id"></span>
+                            </v-flex>
+                            <v-flex xs12 sm6 shrink>
+                                <v-btn color="primary" class="mr-3" dark v-on="on">Assign to a store</v-btn>
+                            </v-flex>                  
+                        </v-layout>
+                        
+                      </div>
                     </template>
                     <v-card>
-                      <v-card-title><h1><b>Assign to a store</b></h1></v-card-title>
+                      <v-card-title>
+                        <h1>
+                          <b>Assign to a store</b>
+                        </h1>
+                      </v-card-title>
                       <v-divider></v-divider>
                       <v-card-text>
                         <v-radio-group v-model="cred.store_id" column>
@@ -222,11 +236,21 @@
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
+                  <v-select
+                    v-model="cred.job_level"
+                    :items="job_list"
+                    label="Profession"
+                    outline
+                    item-value="lvl"
+                    item-text="job_name"
+                    @change="SetJob()"
+                  ></v-select>
+
+                  
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="sucess" @click="handleSubmit()">Submit</v-btn>
-                <!--:disabled="!valid_two"-->
+                <v-btn color="sucess" :disabled="!valid_three" @click="handleSubmit()">Submit</v-btn>
                 <v-btn color="primary" @click="back()">Back</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="cancel()">Cancel</v-btn>
@@ -250,6 +274,7 @@ Display additional info such as address
 
 
 */
+import { mapActions } from "vuex";
 import * as auth from "../services/auth";
 
 export default {
@@ -292,9 +317,9 @@ export default {
       birthdateRules: [
         v => !!v || "Birthdate is required",
         v =>
-          /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i.test(
+          /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)19\d{2}$/i.test(
             v
-          ) || "Invalid format, should be dd/mm/yyyy"
+          ) || "Invalid format, should be dd/mm/19yy"
       ],
       passwordRules: [
         v =>
@@ -315,18 +340,24 @@ export default {
     }
   },
   methods: {
-    handleSubmit: function(e) {
-      e.preventDefault();
-
-      if (
-        this.cred.password === this.cred.password_confirmation &&
-        this.cred.password.length > 0
-      ) {
-        console.log(this.cred);
-        //auth.register(this.cred);
+    ...mapActions(["setSnackbar"]),
+    setSnack: function(txt) {
+      var payload = { text: txt };
+      this.setSnackbar(payload);
+    },
+    handleSubmit: function() {
+      if ( this.valid_one && this.valid_two &&this.valid_three) {
+        var res = auth.register(this.cred);
+        if(res.err){
+            this.setSnack(res.err)
+            this.cancel();
+        } else {
+            this.setSnack("User succesfully registered")
+            this.$router.push({ path: 'dashboard' }) //PUSH TO EMPLOYEE PAGE ?
+        }
+        
       } else {
-        this.cred.password = "";
-        this.cred.passwordConfirm = "";
+        this.setSnackbar({text: 'Invalid form'})
       }
     },
     next: function() {
@@ -350,6 +381,7 @@ export default {
         (this.cred.is_admin = null);
     },
     SetJob: function() {
+        console.log("Setjob")
       switch (this.cred.job_level) {
         case 4:
           this.cred.job = "Supervisor";

@@ -81,9 +81,6 @@ export default {
     },
     async submit(e) {
       e.preventDefault();
-      if (this.$refs.form.validate()) {
-        this.snackbar = true;
-      }
       var credentials = {
         email_address: this.credentials.email_address,
         password: this.credentials.password

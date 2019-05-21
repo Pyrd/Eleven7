@@ -27,20 +27,15 @@ export async function login(creds, context) {
 export async function register(creds, context) {
       console.log("registering")
       let url = baseUrl+"/register"
+      console.log(creds)
       //if(creds.is_admin != null || creds.is_admin == 1) url = baseUrl+"/register-admin"
-      axios.post(url, {
-          first_name: creds.first_name,
-          last_name: creds.last_name,
-          email_address: creds.email_address,
-          phone_number: creds.phone_number,
-          password: creds.password,
-          is_admin: creds.is_admin
-      })
+      axios.post(url, creds)
       .then(response => {
-        context.$router.push('login');
+        return {status:response.status, err: response.data};
       })
       .catch(error => {
-          console.error(error);
+        console.error(error);
+        return {status:response.status, err: response.data};
       });
 }
   

@@ -8,13 +8,13 @@ const bodyParser = require('body-parser');
 var login = function(res, req){
   let email = req.email_address;
   let checkPass = req.password;
-  let q = `SELECT U.employee_id, U.password, E.email_address FROM (users as U FULL OUTER JOIN employees AS E ON E.employee_id = U.employee_id) WHERE U.employee_id = (SELECT employee_id FROM employees WHERE email_address = '${email}');`
+  let q = `SELECT U.employee_id, U.u_password, E.email_address FROM (users as U FULL OUTER JOIN employees AS E ON E.employee_id = U.employee_id) WHERE U.employee_id = (SELECT employee_id FROM employees WHERE email_address = '${email}');`
   db.queryExec(res, q, (err, output) =>{
     if(err)
         return res.status(500).send("Error on the server");
     if(!output || output == [] || output.length < 1 )
         return res.status(405).send("Email address is invalid");
-    let passwordValid = checkPass == output[0].password;   //use bcrypt.compareSync
+    let passwordValid = checkPass == output[0].u_password;   //use bcrypt.compareSync
     console.log("Password valid :" + passwordValid);
     if(!passwordValid)
         return res.status(404).send("Password is invalid")      //.send({ auth: false, token: null });
