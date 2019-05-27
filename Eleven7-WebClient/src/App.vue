@@ -1,5 +1,5 @@
 <template>
-  <v-app v-on:loggedIn="setUser">
+  <v-app>
     <Toolbar></Toolbar>
     <Navdrawer></Navdrawer>
     <v-content>
@@ -29,10 +29,6 @@ export default {
   },
   methods : {
     ...mapActions('UserModule', ['InitUser']),
-    setUser(){
-      console.log("Setting user info");
-      this.InitUser();
-    }
   }, 
   created(){
     console.log("APP CREATED");

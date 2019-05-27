@@ -7,7 +7,6 @@ const state = {
   
   const mutations = {
     [types.SET_SNACK](state, { txt}){
-      console.log("Mutation SET_SNACK : "+ txt);
       state.snackbar_text = txt;
      },
   }
@@ -19,7 +18,6 @@ const state = {
   const actions = {
     setSnackbar({commit}, payload){
       let txt = payload.text;
-      console.log(payload)
       commit(types.SET_SNACK, {txt});
     }
   }

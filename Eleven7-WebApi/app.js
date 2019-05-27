@@ -27,6 +27,8 @@ var AuthController = require('./Controllers/AuthController');
 app.use('/auth', AuthController);
 var EmployeeController = require('./Controllers/EmployeesController');
 app.use('/api', EmployeeController);
+var AddressController = require('./Controllers/AddressController');
+app.use('/api', AddressController);
 var StoreController = require('./Controllers/StoreController');
 app.use('/api', StoreController);
 

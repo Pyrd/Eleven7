@@ -2,15 +2,16 @@ import * as types from './../mutation-types'
 const services = require('../../services/employeeService');
 
 const state = {
-    employees_list : [
-      {id:1, first_name:"John", last_name:"Smith", email:"john.smith@test.io", phone:"0645678901"}
-    ]
+    employees_list : []
   }
   
   const mutations = {
     setEmployees(state, {res}){
       state.employees_list = [...res]
-    }
+    },
+    resetEmployees(state){
+      state.employees_list = []
+    },
 
   }
   

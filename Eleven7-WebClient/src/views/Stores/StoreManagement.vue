@@ -1,22 +1,23 @@
 <template>
   <v-card>
     <v-toolbar dense class="grey darken-2 white--text">
-      <v-toolbar-title class="white--text subtitle" style="margin-left:20px">Dashboard</v-toolbar-title>
+      <v-toolbar-title class="white--text subtitle" style="margin-left:20px">Management dashboard</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
     <v-container fluid grid-list-sm>
-      <v-layout wrap align-space-around justify-space-between fill-height>
+      <v-layout row wrap fill-height>
         <v-flex v-for="menu in menus" :key="menu.name" xs12 sm4 md3>
           <v-hover>
             <v-card
               hover
+              class="white--text"
               slot-scope="{ hover }"
-              :class="`elevation-${hover ? 12 : 2} ${hover ? 'focusCH' : 'tileH'}`" 
+              :class="`elevation-${hover ? 12 : 2} ${hover ? 'focusCS' : 'tileS'}`" 
               height="300px"
               @click="reDirect(menu.route_name)"
             >
               <v-layout column fill-height justify-center align-center>
-                <span class="display-1" style="text-align:center">
+                <span class="display-1">
                   <b>{{menu.name}}</b>
                 </span>
               </v-layout>
@@ -31,12 +32,13 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 export default {
-  name: "Home",
+  name: "Employees",
   data: () => ({
     menus: [
-      { name: "Employees Management", route_name: "employees" },
-      { name: "Store Management", route_name: "stores" },
-      { name: "My Profile", route_name: "AccountSettings" }
+      { name: "Stores List", route_name: "EmployeesList" },
+      { name: "Inventory", route_name: "EmployeesSearch" },
+      { name: "Sales", route_name: "register" },
+      { name: "Stats", route_name: "register" }
     ]
   }),
   methods: {
@@ -56,18 +58,14 @@ export default {
 .v-input__prepend-outer .v-icon {
   color: white;
 }
-.tileH {
-  color: #424242 !important;
-  caret-color: #424242 !important;
-  background-color: #e6e5e5 !important;
+.tileS {
+  background-color: #424242 !important;
   border: 3px solid #424242!important;
   border-radius: 20px;
 }
-.focusCH {
-  color: #0599fb !important;
-  caret-color: #0599fb !important;
-  background-color: #ffffff !important;
-  border: 3px solid #0599fb !important;
+.focusCS {
+  background-color: #505050 !important;
+  border: 3px solid #5005fb !important;
   border-radius: 20px;
 }
 </style>

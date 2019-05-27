@@ -21,6 +21,7 @@
                     type="email"
                     v-model="credentials.email_address"
                     required
+                    clearable
                     :rules="emailRules"
                   ></v-text-field>
                   <v-text-field
@@ -30,6 +31,7 @@
                     label="Password"
                     type="password"
                     v-model="credentials.password"
+                    clearable
                     required
                   ></v-text-field>
                 </v-form>

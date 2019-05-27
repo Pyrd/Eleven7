@@ -5,27 +5,54 @@ import router from './../../router'
 
 const state = {
     is_auth : false,
+    is_init : false,
     user : {
+      avatar : 'https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light',
       email_address : '',
       employee_id: -1,
       first_name: '',
       last_name: '',
       store_id : -1,
       birthdate : '',
-      lvl_permission : -1,
-      phone_number: -1
+      job_level : -1,
+      job : '',
+      phone_number: -1,
+      address : -1,
+      street_num : -1,
+      address_1 : '',
+      address_2 : '',
+      zip_code : -1,
+      city_name : '',
+      country : ''
     }
   }
   
   const mutations = {
     setMain_M(state, {res}){
-      state.user.email_address = res.email_address;
-      state.user.first_name = res.first_name;
-      state.user.last_name = res.last_name;
-      state.user.store_id = res.store_id;
-      state.user.birthdate = res.birthdate;
-      state.user.lvl_permission = res.job_level;
-      state.user.phone_number = res.phone_number;
+      console.log(res)
+      // state.user.employee_id = res.employee_id
+      // state.user.email_address = res.email_address;
+      // state.user.first_name = res.first_name;
+      // state.user.last_name = res.last_name;
+      // state.user.store_id = res.store_id;
+      // state.user.birthdate = res.birthdate;
+      // state.user.phone_number = res.phone_number;
+      // state.user.address.id = res.address_id;
+      // state.user.job = res.job;
+      // state.user.job_level = res.job_level;
+      state.user = Object.assign(state.user, res);
+      console.log("User initiated")
+      state.is_init = true;
+
+    },
+    setAddress_M(state, {res}){
+      console.log(res)
+      state.user.address.street_num = res.street_num
+      state.user.address.address_1 = res.address_1;
+      state.user.address.address_2 = res.address_2;
+      state.user.address.zip_code = res.zip_code;
+      state.user.address.city_name = res.city_name;
+      state.user.address.country = res.country;
     },
     setAuth_M(state, {valid}){
       state.is_auth = valid;
@@ -35,6 +62,7 @@ const state = {
   
   const getters = {
     getAuth: state => state.is_auth,
+    isLoaded: state => state.is_init,
     getUserInfo: state => state.user,
   }
   
@@ -47,19 +75,27 @@ const state = {
       console.log("Checking auth")
       let response = await auth.checkAuth()
       let valid = response.valid
-
       commit('setAuth_M', {valid});
     },
     async setInfo({commit, state}){
+      console.log("Setting user_info")
       if(state.is_auth){
         let response = await employee.getEmployee();
         let res = response[0]
         commit('setMain_M', {res})
       }
     },
+    async setAddress({commit, state}){
+      if(state.is_auth){
+        let response = await employee.getAddress(state.user.address.id);
+        let res = response[0]
+        commit('setAddress_M', {res})
+      }
+    },
     async InitUser({dispatch}){
       await dispatch('checkAuth');
       await dispatch('setInfo');
+      //await dispatch('setAddress');
     },
     logout({state, dispatch}){
       if(state.is_auth){

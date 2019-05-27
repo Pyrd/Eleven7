@@ -15,7 +15,6 @@ var login = function(res, req){
     if(!output || output == [] || output.length < 1 )
         return res.status(405).send("Email address is invalid");
     let passwordValid = checkPass == output[0].u_password;   //use bcrypt.compareSync
-    console.log("Password valid :" + passwordValid);
     if(!passwordValid)
         return res.status(404).send("Password is invalid")      //.send({ auth: false, token: null });
     let body = {employee_id:output[0].employee_id, email_address : output[0].email_address}
@@ -28,10 +27,8 @@ var checkTokenReq = function(res, req){
     let token = req.token;
     jwt.verify(token, config.secretKey, function(err, verifiedJwt){
         if(err){
-            console.log("Token is not valid");
             return res.status(200).send({valid:false});
         }else{
-            console.log("Token is valid");
             return res.status(200).send({valid:true})
         }
     })
@@ -40,10 +37,8 @@ var checkTokenReq = function(res, req){
 var checkToken = function(token){
     jwt.verify(token, config.secretKey, function(err, verifiedJwt){
         if(err){
-            console.log("Token is not valid");
             return false;
         }else{
-            console.log("Token is valid");
             return true;
         }
     })

@@ -1,34 +1,33 @@
 var db = require('../dbContext');
-var services_auth = require('./AuthServices')
 
 
-var selectByID = function(val){            
+var selectByID = function(res, val){            
     var q = 'SELECT * FROM addresses WHERE address_id = ' +val;
-    var res = db.queryRet(q);
+    var res = db.queryExec(res, q);
     return res;
   }
 
-var selectByZipcode = function(val){            
+var selectByZipcode = function(res, val){            
     var q = 'SELECT * FROM addresses WHERE email_zip_code = ' +val;
-    var res = db.queryRet(q);
+    var res = db.queryExec(res, q);
     return res;
 }
 
-var selectByCityname = function(val){            
+var selectByCityname = function(res, val){            
   var q = 'SELECT * FROM addresses WHERE city_name = ' +val;
-  var res = db.queryRet(q);
+  var res = db.queryExec(res, q);
   return res;
 }
 
-var selectByCountry = function(val){            
+var selectByCountry = function(res, val){            
   var q = 'SELECT * FROM addresses WHERE country = ' +val;
-  var res = db.queryRet(q);
+  var res = db.queryExec(res, q);
   return res;
 }
 
-var selectAllAddresses = function(){            
+var selectAllAddresses = function(res){            
   var q = 'SELECT * FROM addresses';
-  var res = db.queryRet(q);
+  var res = db.queryExec(res, q);
   return res;
 }
 /*
@@ -61,8 +60,6 @@ var updateEmployee = function(res, req){
 
 
 module.exports = {
-  selectByEmail : selectByEmail,
-  selectAllEmployees: selectAllEmployees,
   selectByID : selectByID,
   selectByZipcode: selectByZipcode,
   selectByCityname : selectByCityname,

@@ -2,7 +2,7 @@
       <v-toolbar id="toolbar" color="grey darken-3" app fixed clipped-left dense>
         <v-toolbar-side-icon class="white--text" @click="openDrawer"></v-toolbar-side-icon>
         <v-toolbar-title class="white--text" style="margin-left:0px">
-          <v-btn flat to="/" class="white--text" style="padding:0px;">
+          <v-btn flat @click="redirect('home')" class="white--text" style="padding:0px;">
             <b>Eleven</b>
             <b style="color:orange">7</b> Dashboard
           </v-btn>
@@ -16,7 +16,7 @@
             <template v-slot:activator="{ on }">
               <v-btn color="primary" flat icon class="white--text" v-on="on">
                 <v-avatar size="32px" color="grey lighten-4">
-                  <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar">
+                  <img :src="user_info.avatar" alt="avatar">
                 </v-avatar>
               </v-btn>
             </template>
@@ -25,7 +25,7 @@
               <v-layout align-center justify-center row fill-height>
                 <v-flex style="margin-right:10px">
                   <v-avatar size="64px" color="grey lighten-4">
-                    <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="avatar">
+                    <img :src="user_info.avatar" alt="avatar">
                   </v-avatar>
                 </v-flex>
                 <v-flex>
@@ -82,7 +82,8 @@
           authTrue: [
             {icon: 'account_box',  title: 'Manage my account', action:'settings'},
             {icon: 'exit_to_app',  title: 'Logout', action:'logout'}
-          ]
+          ],
+          
       }),
       computed: {
       ...mapGetters({
@@ -97,17 +98,20 @@
           var payload = {text: txt}
           this.setSnackbar(payload);
         },
+        redirect : function(name){
+          this.$router.push({name: name});
+        },
         menuCall: function(action){
           switch(action){
             case'login':
-              this.$router.push('login');
+              this.$router.push({name: 'login'});
               break;
             case 'settings':
-              this.$router.push('account_settings');
+              this.$router.push({name: 'AccountSettings'});
               break;
             case 'logout':
               this.logout()
-              this.$router.push('login');
+              this.$router.push({name: 'login'});
               break;
           }
         }

@@ -70,7 +70,7 @@
 -> Should it be ?
 1. /stores/inventory/:id
 2. /stock/inventory/:id
-3. /stores/:id/inventory
+3. /stores/:id/inventory (approved by marine)
 
 
 

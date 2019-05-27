@@ -25,7 +25,9 @@ var executeQuery = function(res, query, callback){
             }
             sql.close()
           } else {
+            console.log("Query : " +query)
             console.log(result.recordset);
+            console.log("###########################################")
             if(callback){
               callback(null, result.recordset);
             } else {

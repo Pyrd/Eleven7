@@ -1,36 +1,56 @@
 import axios from 'axios'
 
-
-// class Employee {
-   
-//     constructor(id, first_name, last_name, email, phone){
-//         this.id = id;
-//         this.first_name = first_name;
-//         this.last_name = last_name;
-//         this.email = email;
-//         this.phone = phone;
-//     }
-// }
-
-
-const baseUrl = "http://localhost:3000/api/employees"
+const baseUrl = "http://localhost:3000/api/"
 
 export const getAll = async function(){
-    const response = await axios.get(baseUrl)
+    const response = await axios.get(baseUrl + 'employees/')
     return response.data;
 }
 
 export const getEmployee = async function(){
     var user = JSON.parse(localStorage.getItem('user'));
     let id = (user.employee_id);
-    const response = await axios.get(baseUrl+'/'+id)
+    const response = await axios.get(baseUrl+'employees/'+id)
     return response.data;
 }
 
 export const getEmployeeById = async function(id){
-    const response = await axios.get(baseUrl+'/'+id)
+    console.log("services id : " +id)
+    const response = await axios.get(baseUrl+'employees/'+id)
     return response.data;
 }
+
+
+export const getAddress = async function(id){
+    const response = await axios.get(baseUrl+'address/'+id)
+    return response.data;
+}
+
+
+export async function edit_employee(user) {
+    let url = baseUrl+"employees/edit"
+    axios.post(url, user)
+    .then(response => {
+      return {status:response.status, err: null};
+    })
+    .catch(error => {
+      console.error(error);
+      return {status:response.status, err: response.data};
+    });
+}
+
+export async function search_employee(payload) {
+    let url = baseUrl+"employees/search"
+    console.log(JSON.stringify(payload, null, 4))
+    let response = await axios.post(url, payload)
+    if(response.status == 200) {
+        return {status:response.status, err: null, result :response.data};
+    } else {
+        console.error(error);
+        return {status:response.status, err: response.data, result : null};
+    }
+}
+
 
 
 

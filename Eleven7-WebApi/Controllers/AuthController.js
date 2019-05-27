@@ -24,8 +24,9 @@ router.use(bodyParser.json());
 // });
 
 router.post('/register', function(req, res) {
-    console.log("register ...");
+    console.log("registering new employye :");
     console.log(req.body)
+    console.log("#######################")
     let r = req.body;
     service_employee.insertEmployee(res, r);
 
@@ -34,12 +35,14 @@ router.post('/register', function(req, res) {
 router.post('/login', function(req, res) {
     console.log("Login ...");
     console.log(req.body)
+    console.log("#######################")
     service_auth.login(res, req.body);
 });
 
 router.post('/check', function(req, res) {
     console.log("Check ...");
     console.log(req.body)
+    console.log("#######################")
     service_auth.checkTokenReq(res, req.body);
 });
 

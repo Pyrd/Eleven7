@@ -17,17 +17,12 @@ router.get("/stores", function(req , res){
 
 router.get("/stores/:id", function(req , res){
     let id = req.params.id;
-    let q = `select * from employees WHERE store_id = ${id}`
+    let q = `select * from stores WHERE store_id = ${id}`
     db.queryExec(res, q);
 });
 
-/*
-*   Add new store (with inventory & address)
-*   Edit, update store (given id)
-*   Edit inventory()
-*   
 
-*/
+
 
 
 module.exports = router;

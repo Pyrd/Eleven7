@@ -25,18 +25,18 @@ export async function login(creds, context) {
 }
 
 export async function register(creds, context) {
-      console.log("registering")
-      let url = baseUrl+"/register"
-      console.log(creds)
-      //if(creds.is_admin != null || creds.is_admin == 1) url = baseUrl+"/register-admin"
-      axios.post(url, creds)
-      .then(response => {
-        return {status:response.status, err: response.data};
-      })
-      .catch(error => {
-        console.error(error);
-        return {status:response.status, err: response.data};
-      });
+  console.log("registering")
+  let url = baseUrl+"/register"
+  console.log(creds)
+  //if(creds.is_admin != null || creds.is_admin == 1) url = baseUrl+"/register-admin"
+  axios.post(url, creds)
+  .then(response => {
+    return {status:response.status, err: response.data};
+  })
+  .catch(error => {
+    console.error(error);
+    return {status:response.status, err: response.data};
+  });
 }
   
     // To log out, we just need to remove the token

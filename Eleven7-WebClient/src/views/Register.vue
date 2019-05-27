@@ -353,7 +353,7 @@ export default {
             this.cancel();
         } else {
             this.setSnack("User succesfully registered")
-            this.$router.push({ path: 'dashboard' }) //PUSH TO EMPLOYEE PAGE ?
+            this.$router.push({ name: 'home' })
         }
         
       } else {

@@ -1,13 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Login from './views/Login.vue'
-import Register from './views/Register.vue'
-import Admin from './views/Admin.vue'
-import Employees from './views/Employees/Employees.vue'
-import AccountSettings from './views/AccountSettings.vue'
 import store from './store/store'
 Vue.use(Router)
+
+function loadView(view) {
+    return () => import(/* webpackChunkName: "view-[request]" */ `@/views/${view}.vue`)
+  }
 
 let router = new Router({
     mode: 'history',
@@ -15,7 +13,7 @@ let router = new Router({
         {
             path: '/login',
             name: 'login',
-            component: Login,
+            component: loadView('Login'),
             meta: { 
                 guest: true
             }
@@ -23,12 +21,15 @@ let router = new Router({
         { 
             path: '/register',
             name: 'register',
-            component: () =>  import(/* webpackChunkName: "register" */ './views/Register.vue'),
+            component: loadView('Register'),
+            meta: { 
+                requiresAuth: true
+            }
         },
         {
-          path: '/dashboard',
+          path: '/',
           name: 'home',
-          component: Home,
+          component: loadView('Home'),
           meta: { 
               requiresAuth: true
           }
@@ -36,21 +37,48 @@ let router = new Router({
         {
             path: '/employees',
             name: 'employees',
-            component: Employees,
+            props: true,
+            component: loadView('Employees/Employees'),
             meta: { 
                 requiresAuth: true
             },
-            children: [
-                {
-                  path: '/:id',
-                  component: () => import(/* webpackChunkName: "employeeprofile" */ './views/Employees/EmployeeProfile.vue')
-                },
-              ]
+        },
+        {
+            path: '/employees/list',
+            name: 'EmployeesList',
+            component: loadView('Employees/EmployeesList'),
+            meta: { 
+                requiresAuth: true
+            },
+        },
+        {
+            path: '/employees/search',
+            name: 'EmployeesSearch',
+            component: loadView('Employees/EmployeeSearch'),
+            meta: { 
+                requiresAuth: true
+            },
+        },
+        {
+            path: '/employees/profile/:id',
+            name: 'employee_profile',
+            component: loadView('Employees/EmployeeProfile'),
+            meta: { 
+                requiresAuth: true
+            },
+        },
+        {
+            path: '/stores',
+            name: 'stores',
+            component: loadView('Stores/StoreManagement'),
+            meta: { 
+                requiresAuth: true
+            },
         },
         {
             path: '/account_settings',
             name: 'AccountSettings',
-            component: () => import(/* webpackChunkName: "acc_settings" */ './views/AccountSettings.vue'),
+            component: loadView('AccountSettings'),
             meta: { 
                 requiresAuth: true
             }
@@ -58,7 +86,7 @@ let router = new Router({
         {
             path: '/admin',
             name: 'admin',
-            component: () => import(/* webpackChunkName: "admin" */ './views/Admin.vue'),
+            component: () => loadView('Admin'),
             meta: { 
                 requiresAuth: true
             }
@@ -67,22 +95,22 @@ let router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.matched.some(record => record.meta.requiresAuth)) { 
+  if(to.matched.some(record => record.meta.requiresAuth)) {
+      
       if (localStorage.getItem('jwt') == null) {
           next({
               path: '/login',
               params: { nextUrl: to.fullPath }
           })
       } else {
-        next()
-          
-      }
-  } else if(to.matched.some(record => record.meta.guest)) {
-      if(localStorage.getItem('jwt') == null){
+        //   console.log(store)
+        //   if(store.getters['UserModule/isLoaded']){
+        //     next()
+        //   } else {
+        //       console.log("not loaded")
+        //   }
           next()
-      }
-      else{
-          next({ name: 'dashboard'})
+          
       }
   }else {
       next() 
@@ -98,3 +126,6 @@ export default router
     //   // which is lazy-loaded when the route is visited.
     //   component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
     // }
+
+
+   
