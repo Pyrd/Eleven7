@@ -1,9 +1,16 @@
 #Todo
 
-*   Dashboard sync with real stats
-*   Cart List
-*   Main management
-*   Filters in tables
+*   Dashboard sync with real stats (last supply && last income)
+    *   get in api
+    *   stats view dashboard
 
-#Bugs
-*   Date in Node is bugged
+*   supply simu
+    *   post in api
+    *   services
+    *   finish simu func
+*   supply list
+    *   table
+    *   get api
+    *   services
+*   fix filter sale date filters by sending actual date
+*   Filters in tables

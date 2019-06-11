@@ -2,7 +2,6 @@
   <v-snackbar
     v-model="snackbar"
     top
-    timeout="5000"
     color="white black--text text-xs-center">
     <span class="subheading">{{ text }}</span>
     <v-btn
