@@ -45,25 +45,47 @@ INSERT INTO employees (first_name, last_name, birthdate, email_address, phone_nu
 */
 var insertEmployee = function(res, req){
     let encryptedPass = bcrypt.hashSync(req.password, 12);
-    //console.log(encryptedPass)      
-    var q = `INSERT INTO addresses (street_num, address_1, address_2, zip_code, city_name, country) values('${req.street_num}','${req.address_1}','${req.address_2}','${req.zip_code}','${req.city_name}','${req.country}'); INSERT INTO employees (store_id, first_name, last_name, birthdate, email_address, phone_number, address_id, salary, job_level, job) values('${req.store_id}', '${req.first_name}','${req.last_name}','${req.birthdate}','${req.email_address}','${req.phone_number}', (SELECT address_id FROM addresses WHERE address_id = SCOPE_IDENTITY()), '${req.salary}',${req.job_level},'${req.job}');INSERT INTO users values((SELECT employee_id FROM employees WHERE employee_id = SCOPE_IDENTITY()), '${req.password}')`;
+    //console.log(encryptedPass)
+    var q = `INSERT INTO addresses (street_num, address_1, address_2, zip_code, city_name, country) values('${req.street_num}','${req.address_1}','${req.address_2}','${req.zip_code}','${req.city_name}','${req.country}'); INSERT INTO employees (store_id, first_name, last_name, birthdate, email_address, phone_number, address_id, salary, job_level, job, date_start) values('${req.store_id}', '${req.first_name}','${req.last_name}','${req.birthdate}','${req.email_address}','${req.phone_number}', (SELECT address_id FROM addresses WHERE address_id = SCOPE_IDENTITY()), '${req.salary}',${req.job_level},'${req.job}', '${req.start_date}');INSERT INTO users values((SELECT employee_id FROM employees WHERE employee_id = SCOPE_IDENTITY()), '${req.password}')`;
     db.queryExec(res, q);
     return res;
 }
 
+var fireEmployee = function(res, req){
+  let date = new Date(this.valueOf())
+  console.log(date)
+  let qdate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`
+  console.log(qdate)
+  var q = `INSERT INTO employees where employee_id = (end_start) values( '${qdate}')`;
+  console.log(q)
+  //db.queryExec(res, q);
+  return res;
+}
+
 var searchEmployee = function(res, req){
+  console.log(req)
   var q = `SELECT * FROM employees WHERE`
-  var separator = (req.separator ? 'AND' : 'OR')
-  var t = false;
+  var separator = (req.separator ? ' AND' : ' OR')
+  var t1 = false;
+  var t2 = false;
+  var t3 = false;
   for(var i = 0; i < req.filters.length; i++){
-    if(req.filters[i].mask != ''){
-      
-      let tmp = `(${req.filters[i].name} like '%${req.filters[i].mask}%')`
-      if(t) q+= separator
+    t3 = true;
+    if(req.filters[i].mask.length > 0){
+      let tmp = "("
+      for(var j = 0; j < req.filters[i].mask.length; j++){
+        if(t1) tmp +=' OR'
+        tmp += ` (${req.filters[i].name} like '%${req.filters[i].mask[j]}%')`
+        if(!t1) t1 = true
+      }
+      tmp+=')'
+      t1 = false;
+      if(t2) q+= separator
       q += tmp
-      if(!t) t = true;
+      if(!t2) t2 = true;
     }
   }
+  if(!t3) q +='1==1'
   console.log(q)
   db.queryExec(res, q);
 }

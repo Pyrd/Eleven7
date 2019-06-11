@@ -31,6 +31,8 @@ var AddressController = require('./Controllers/AddressController');
 app.use('/api', AddressController);
 var StoreController = require('./Controllers/StoreController');
 app.use('/api', StoreController);
+var StockController = require('./Controllers/StockController');
+app.use('/api', StockController);
 
 
 

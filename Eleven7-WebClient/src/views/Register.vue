@@ -93,9 +93,9 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" :disabled="!valid_one" @click="next()">Continue</v-btn>
-                <v-spacer></v-spacer>
                 <v-btn color="error" @click="cancel()">Cancel</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="primary" :disabled="!valid_one" @click="next()">Continue</v-btn>
               </v-card-actions>
             </v-card>
           </v-stepper-content>
@@ -162,10 +162,10 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="primary" :disabled="!valid_two" @click="next()">Continue</v-btn>
+                <v-btn color="error" @click="cancel()">Cancel</v-btn>
                 <v-btn color="primary" @click="back()">Back</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="error" @click="cancel()">Cancel</v-btn>
+                <v-btn color="primary" :disabled="!valid_two" @click="next()">Continue</v-btn>
               </v-card-actions>
             </v-card>
           </v-stepper-content>
@@ -205,15 +205,14 @@
                           <b>Store</b>
                         </v-subheader>
                         <v-layout align-center justify-space-between row fill-height>
-                            <v-flex xs12 sm6>
-                                <span class="subheading font-weight-light mr-1">ID</span>
-                                <span class="display-1 font-weight-light" v-text="cred.store_id"></span>
-                            </v-flex>
-                            <v-flex xs12 sm6 shrink>
-                                <v-btn color="primary" class="mr-3" dark v-on="on">Assign to a store</v-btn>
-                            </v-flex>                  
+                          <v-flex xs12 sm6>
+                            <span class="subheading font-weight-light mr-1">ID</span>
+                            <span class="display-1 font-weight-light" v-text="cred.store_id"></span>
+                          </v-flex>
+                          <v-flex xs12 sm6 shrink>
+                            <v-btn color="primary" class="mr-3" dark v-on="on">Assign to a store</v-btn>
+                          </v-flex>
                         </v-layout>
-                        
                       </div>
                     </template>
                     <v-card>
@@ -245,15 +244,13 @@
                     item-text="job_name"
                     @change="SetJob()"
                   ></v-select>
-
-                  
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="sucess" :disabled="!valid_three" @click="handleSubmit()">Submit</v-btn>
+                <v-btn color="error" @click="cancel()">Cancel</v-btn>
                 <v-btn color="primary" @click="back()">Back</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn color="error" @click="cancel()">Cancel</v-btn>
+                <v-btn color="sucess" :disabled="!valid_three" @click="handleSubmit()">Submit</v-btn>
               </v-card-actions>
             </v-card>
           </v-stepper-content>
@@ -346,18 +343,17 @@ export default {
       this.setSnackbar(payload);
     },
     handleSubmit: function() {
-      if ( this.valid_one && this.valid_two &&this.valid_three) {
+      if (this.valid_one && this.valid_two && this.valid_three) {
         var res = auth.register(this.cred);
-        if(res.err){
-            this.setSnack(res.err)
-            this.cancel();
+        if (res.err) {
+          this.setSnack(res.err);
+          this.cancel();
         } else {
-            this.setSnack("User succesfully registered")
-            this.$router.push({ name: 'home' })
+          this.setSnack("User succesfully registered");
+          this.$router.push({ name: "home" });
         }
-        
       } else {
-        this.setSnackbar({text: 'Invalid form'})
+        this.setSnackbar({ text: "Invalid form" });
       }
     },
     next: function() {
@@ -381,7 +377,7 @@ export default {
         (this.cred.is_admin = null);
     },
     SetJob: function() {
-        console.log("Setjob")
+      console.log("Setjob");
       switch (this.cred.job_level) {
         case 4:
           this.cred.job = "Supervisor";
