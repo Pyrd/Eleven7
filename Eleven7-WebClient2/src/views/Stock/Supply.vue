@@ -5,8 +5,8 @@
       justify-center>
       <v-flex xs12>
         <material-card
-          color="green"
-          title="Employee Overview">
+          color="purple"
+          title="Supplies Overview">
           <v-layout
             row
             align-center
@@ -38,19 +38,27 @@
             </v-flex>
             <v-flex
               xs12
-              sm4
+              sm2
+              style="display: flex;justify-content: right">
+              <v-select
+                v-model="mode"
+                :items="items"/>
+            </v-flex>
+            <v-flex
+              xs12
+              sm2
               style="display: flex;justify-content: right">
               <v-btn
                 flat
                 color="grey darken-2"
-                @click="loadEmployees">
+                @click="loadSupply">
                 <v-icon>mdi-refresh</v-icon>Refresh
               </v-btn>
             </v-flex>
           </v-layout>
           <v-data-table
             :headers="headers"
-            :items="employees"
+            :items="supplies"
             :search="filters.search"
             :pagination.sync="defaultSet"
             :loading="isLoading"
@@ -60,40 +68,32 @@
               v-slot:progress
               color="blue"
               indeterminate/>
+              <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light grey--text text--darken-3"
+                v-text="header.text"
+              />
+            </template>
             <template v-slot:items="props">
-              <td class="text-xs-center">{{ props.item.employee_id }}</td>
+              <td class="text-xs-center">{{ props.item.supply_id }}</td>
               <td class="text-xs-center">{{ props.item.store_id }}</td>
-              <td class="text-xs-center">{{ props.item.first_name }}</td>
-              <td class="text-xs-center">{{ props.item.last_name }}</td>
-              <td class="text-xs-center">{{ props.item.birthdate }}</td>
-              <td class="text-xs-center">{{ props.item.email_address }}</td>
-              <td class="text-xs-center">{{ props.item.phone_number }}</td>
+              <td class="text-xs-center">{{ props.item.supply_date }}</td>
+              <td class="text-xs-center">{{ props.item.total_item }}</td>
               <td class="text-xs-center">
-
                 <v-tooltip left>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      flat
-                      icon
-                      class="green"
-                      @click="Seestore(props.item.store_id)">
-                      <v-icon>mdi-store</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>See Store</span>
-                </v-tooltip>
-
-                <v-tooltip right>
-                  <template v-slot:activator="{ on }">
-                    <v-btn
-                      flat
-                      icon
-                      class="green"
-                      @click="Seeprofile(props.item.employee_id)">
-                      <v-icon>mdi-account-box</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>See profile</span>
+                  <v-btn
+                    slot="activator"
+                    flat
+                    icon
+                    class="blue"
+                    @click="Seeitems(props.item.supply_id)"
+                  >
+                    <v-icon>mdi-package-variant</v-icon>
+                  </v-btn>
+                  <span>See supply</span>
                 </v-tooltip>
               </td>
             </template>
@@ -113,34 +113,23 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import * as services from '../../services/employeeService'
+import * as services from '../../services/storeService'
 export default {
-  name: 'Employees',
+  name: 'Supply',
   data: () => ({
     filter_nav: false,
     showAdvanced: false,
     showFilters: false,
     isLoading: true,
     filters: {
-      search: '',
-      firstname: '',
-      rating: { active: false, mask: 0 },
-      price: { active: false, min: 0, max: 2000000 }
+      search: ''
     },
     headers: [
-      {
-        text: 'ID',
-        align: 'center',
-        sortable: true,
-        value: 'id'
-      },
+      { text: 'Supply ID', align: 'center', value: 'sale_id' },
       { text: 'Store ID', align: 'center', value: 'store_id' },
-      { text: 'First name', align: 'center', value: 'first_name' },
-      { text: 'Last name', align: 'center', value: 'last_name' },
-      { text: 'Birthdate', align: 'center', value: 'birthdate' },
-      { text: 'Email', align: 'center', value: 'email' },
-      { text: 'Phone', align: 'center', value: 'phone' },
-      { text: 'Action', align: 'center', value: '' }
+      { text: 'Supply Date', align: 'center', value: 'supply_date' },
+      { text: 'Total Items', align: 'center', value: 'total_items' },
+      { text: 'Actions', align: 'center', value: 'actions' },
     ],
     defaultSet: {
       descending: true,
@@ -149,32 +138,63 @@ export default {
       sortBy: '',
       totalItems: 200
     },
-    employees: []
+    supplies: [],
+    items: ['All', 'Last Week', 'Last 24h'],
+    mode: 'All'
   }),
   methods: {
     ...mapActions(['setSnackbar']),
-    ...mapActions('EmployeesModule', ['loadEmployees']),
     setSnack: function (txt) {
       var payload = { text: txt }
       this.setSnackbar(payload)
     },
-    Seeprofile: function (id) {
-      this.$router.push({ name: 'Employee Profile', params: { id: id } })
+    Seeitems: function (id) {
+      this.$router.push({ name: 'SupplyItems', params: { id: id } })
     },
-    Seestore: function (id) {
-      this.$router.push({ name: 'Store Profile', params: { id: id } })
+    nowDate () {
+      let date = new Date()
+      let day = date.getDate()
+      let h = date.getHours()
+      let m = date.getMinutes()
+      let s = date.getSeconds()
+      let day_t = day < 10 ? '0' + day : '' + day
+      let qdate = [day_t, date.getMonth(), date.getFullYear()]
+      return qdate
     },
-    loadEmployeees: async function () {
-      this.employees = await services.getAll()
+    loadSupply: async function () {
+      this.isLoading = true
+      this.supplies = []
+      let parameters = {
+        date : this.nowDate(),
+        query_mode : 0,
+        store_id : -1
+      }
+      switch (this.mode) {
+        case 'Last Week':
+          parameters.query_mode = 1
+          break
+        case 'Last 24h':
+          parameters.query_mode = 2
+          break
+      }
+      let res = await services.getSupply(parameters)
+      console.log(JSON.stringify(res, null, 4))
+      if(res.err){
+        this.setSnack('An error occured : ' +  res.err)
+      } else{
+        this.setSnack('Loaded succesfully')
+        this.supplies = res.result
+      }
       this.isLoading = false
+      
     },
     goBack: function () {
       this.$router.go(-1)
-      // this.$router.push({ name: "Employees Management" });
+      // this.$router.push({ name: "Store Management" });
     }
   },
   mounted () {
-    this.loadEmployeees()
+    this.loadSupply()
   }
 }
 </script>

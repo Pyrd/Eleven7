@@ -49,7 +49,7 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn color="error">Cancel</v-btn>
+                <!-- <v-btn color="error">Cancel</v-btn> -->
                 <v-spacer/>
                 <v-btn
                   :disabled="!valid"

@@ -71,3 +71,40 @@ export const postMultipleSale = async function (payload) {
     return { status: response.status, err: response.data, result: null }
   }
 }
+
+export const postSupply = async function (payload) {
+  let url = baseUrl + '/supply/add/'
+  // console.log(JSON.stringify(payload, null, 4))
+  let response = await axios.post(url, payload)
+  if (response.status === 200) {
+    return { status: response.status, err: null, result: response.data }
+  } else {
+    return { status: response.status, err: response.data, result: null }
+  }
+}
+
+export const getSupply = async function (payload) {
+  let url = baseUrl + '/supply/get/'
+  // console.log(JSON.stringify(payload, null, 4))
+  let response = await axios.post(url, payload)
+  if (response.status === 200) {
+    return { status: response.status, err: null, result: response.data }
+  } else {
+    return { status: response.status, err: response.data, result: null }
+  }
+}
+
+export const getSupplyById = async function (id) {
+  const response = await axios.get(baseUrl + '/supply/' + id)
+  return response.data
+}
+
+export const getSupplyItemById = async function (id) {
+  const response = await axios.get(baseUrl + '/supply/items/' + id)
+  return response.data
+}
+
+export const getAllSupply = async function () {
+  const response = await axios.get(baseUrl + '/supply')
+  return response.data
+}

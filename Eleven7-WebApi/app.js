@@ -34,6 +34,9 @@ app.use('/api', StoreController);
 var StockController = require('./Controllers/StockController');
 app.use('/api', StockController);
 
+var StatController = require('./Controllers/StatController');
+app.use('/api', StatController);
+
 
 
 

@@ -34,7 +34,7 @@
             <v-icon class="mr-2">mdi-cash-usd</v-icon>Sales
           </v-tab>
           <v-tab class="mr-3">
-            <v-icon class="mr-2">chart-timeline-variant</v-icon>Stats
+            <v-btn  class="mr-2" flat icon @click="SeeStats"><v-icon >chart-timeline-variant</v-icon>Stats</v-btn>
           </v-tab>
         </v-tabs>
       </v-flex>
@@ -65,10 +65,15 @@
               :loading="isLoading"
               class="elevation-1"
             >
-              <v-progress-linear
-                v-slot:progress
-                color="blue"
-                indeterminate/>
+              <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light blue--text text--darken-3"
+                v-text="header.text"
+              />
+            </template>
               <template v-slot:items="props">
                 <td>{{ props.item.employee_id }}</td>
                 <td class="text-xs-center">{{ props.item.job }}</td>
@@ -130,10 +135,15 @@
               :loading="isLoading"
               class="elevation-1"
             >
-              <v-progress-linear
-                v-slot:progress
-                color="blue"
-                indeterminate/>
+              <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light orange--text text--darken-2"
+                v-text="header.text"
+              />
+            </template>
               <template v-slot:items="props">
                 <td class="text-xs-center">{{ props.item.product_id }}</td>
                 <td class="text-xs-center">{{ props.item.name }}</td>
@@ -200,10 +210,15 @@
               :loading="isLoading"
               class="elevation-1"
             >
-              <v-progress-linear
-                v-slot:progress
-                color="blue"
-                indeterminate/>
+              <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light purple--text text--darken-3"
+                v-text="header.text"
+              />
+            </template>
               <template v-slot:items="props">
                 <td class="text-xs-center">{{ props.item.sale_date }}</td>
                 <td class="text-xs-center">{{ props.item.total_price }}</td>
@@ -323,8 +338,11 @@ export default {
       this.$router.go(-1)
       // this.$router.push({ name: "Store Management List" });
     },
-    Seecart: function () {
-      this.$router.push({ name: 'Cart', params: { id: this.id } })
+    Seecart: function (id) {
+      this.$router.push({ name: 'Cart', params: { id: id } })
+    },
+    SeeStats: function () {
+      this.$router.push({ name: 'Store Stats', params: { id: this.id } })
     },
     Seeprofile: function (id) {
       this.$router.push({ name: 'Employee Profile', params: { id: id } })

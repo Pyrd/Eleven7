@@ -131,6 +131,15 @@ let router = new Router({
       }
     },
     {
+      path: '/stores/stats/:id',
+      name: 'Store Stats',
+      component: loadView('Stores/StoreStats'),
+      meta: {
+        requiresAuth: true,
+        AuthLevel: 2
+      }
+    },
+    {
       path: '/stock',
       name: 'Stock Management',
       component: loadView('Stock/Stock'),
@@ -179,6 +188,15 @@ let router = new Router({
       path: '/stock/supply',
       name: 'Supply',
       component: loadView('Stock/Supply'),
+      meta: {
+        requiresAuth: true,
+        AuthLevel: 2
+      }
+    },
+    {
+      path: '/stock/supply/items/:id',
+      name: 'SupplyItems',
+      component: loadView('Stock/SupplyItems'),
       meta: {
         requiresAuth: true,
         AuthLevel: 2

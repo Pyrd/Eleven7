@@ -64,10 +64,15 @@
             :loading="isLoading"
             class="elevation-1"
           >
-            <v-progress-linear
-              v-slot:progress
-              color="blue"
-              indeterminate/>
+            <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light purple--text text--darken-3"
+                v-text="header.text"
+              />
+            </template>
             <template v-slot:items="props">
               <td class="text-xs-center">{{ props.item.sale_id }}</td>
               <td class="text-xs-center">{{ props.item.store_id }}</td>
@@ -109,9 +114,6 @@ import * as services from '../../services/storeService'
 export default {
   name: 'Sales',
   data: () => ({
-    filter_nav: false,
-    showAdvanced: false,
-    showFilters: false,
     isLoading: true,
     filters: {
       search: ''

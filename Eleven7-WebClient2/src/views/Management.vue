@@ -182,7 +182,7 @@
           <material-stats-card
             v-if="user_info.job_level >= 2"
             color="orange"
-            icon="mdi-cart-plus"
+            icon="mdi-package-variant"
             title="Action"
             value="Supply"
             @click="reDirect('Supply', -1)"

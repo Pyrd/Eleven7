@@ -60,6 +60,15 @@
               v-slot:progress
               color="blue"
               indeterminate/>
+              <template
+              slot="headerCell"
+              slot-scope="{ header }"
+            >
+              <span
+                class="font-weight-light green--text text--darken-3"
+                v-text="header.text"
+              />
+            </template>
             <template v-slot:items="props">
               <td class="text-xs-center">{{ props.item.employee_id }}</td>
               <td class="text-xs-center">{{ props.item.store_id }}</td>

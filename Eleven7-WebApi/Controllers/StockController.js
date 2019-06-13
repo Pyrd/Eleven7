@@ -56,7 +56,7 @@ router.post("/stock/product/delete/:id", function(req , res){
 
 //Get inventories
 router.get("/stock/inventory", function(req , res){
-    let q = `SELECT * FROM inventory`
+    let q = `SELECT store_id, I.product_id, quantity, P.name FROM inventory AS I FULL JOIN product_catalog AS P ON I.product_id = P.product_id `
     console.log(q)
     db.queryExec(res, q);
 });
